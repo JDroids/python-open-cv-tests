@@ -13,7 +13,6 @@ for filename in os.listdir(".\Pictures"):
     #TODO: Crop Image
 
     croppedImage = img[1462:1914, 336:1020]
-    #croppedImage = img # Get rid of this
 
 
     b, g, r = cv2.split(croppedImage)
@@ -23,7 +22,19 @@ for filename in os.listdir(".\Pictures"):
     blueHist = cv2.calcHist([b],[0],None,[256],[0,256])
     redHist = cv2.calcHist([r],[0],None,[256],[0,256])
 
+    print(filename)
 
+    lastBlue = blueHist[-1][0]
+    lastRed = redHist[-1][0]
+
+    #print("Blue Hist " + str(lastBlue)
+    #print("Red Hist " + str(redHist)
+    
+    if(lastBlue > lastRed): print("Blue Jewel")
+    elif(lastRed > lastBlue): print("Red Jewel")
+    else: print("What?!?!?!??!?!??!?")
+    
+    print("\n")
 
     '''maxNumber = 0
     for item in hist:
@@ -35,8 +46,8 @@ for filename in os.listdir(".\Pictures"):
     print(maxNumber)
     print(np.argwhere(hist == correctArray)[0])'''
 
-
-
+    
+    '''
     gray = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
     grayFiltered = cv2.bilateralFilter(gray, 11, 17, 17)
     edged = cv2.Canny(grayFiltered, 30, 200)
@@ -46,4 +57,4 @@ for filename in os.listdir(".\Pictures"):
 
     cv2.imwrite('.\Results\\' + 'Cropped' + filename, croppedImage)
 
-    plt.savefig('.\Results\\' + filename)
+    plt.savefig('.\Results\\' + filename)''' 
