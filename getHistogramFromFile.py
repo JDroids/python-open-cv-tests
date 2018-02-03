@@ -1,38 +1,49 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
- 
-img = cv2.imread('Blue.jpg')
-hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-
-b, g, r = cv2.split(img)
-
-#TODO: Crop Image
-
-croppedImage = img[1462:1914, 336:1020]
-
-#Maybe use color specific hist
-
-hist = cv2.calcHist(croppedImage, [0, 1], None, [180, 256], [0, 180, 0, 256])
-
-histFile = open('RedCroppedHistogram.txt', 'w')
-
-for item in hist:
-    histFile.write(str(item)+'\n')
-
-
-histFile.close()
-
-
-gray = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
-grayFiltered = cv2.bilateralFilter(gray, 11, 17, 17)
-edged = cv2.Canny(grayFiltered, 30, 200)
-
-cv2.imshow("Cropped Image", croppedImage)
-cv2.imshow("Edged Image", edged)
+import os
 
 
 
-plt.plot(hist)
+for filename in os.listdir(".\Pictures"):
+    
+    img = cv2.imread('.\Pictures\\' + str(filename))
+    #hsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
 
-plt.show()
+    #TODO: Crop Image
+
+    croppedImage = img[1462:1914, 336:1020]
+    #croppedImage = img # Get rid of this
+
+
+    b, g, r = cv2.split(croppedImage)
+
+    #Maybe use color specific hist
+
+    blueHist = cv2.calcHist([b],[0],None,[256],[0,256])
+    redHist = cv2.calcHist([r],[0],None,[256],[0,256])
+
+
+
+    '''maxNumber = 0
+    for item in hist:
+        for number in item:
+            if number > maxNumber:
+                maxNumber = number
+                correctArray = item
+
+    print(maxNumber)
+    print(np.argwhere(hist == correctArray)[0])'''
+
+
+
+    gray = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
+    grayFiltered = cv2.bilateralFilter(gray, 11, 17, 17)
+    edged = cv2.Canny(grayFiltered, 30, 200)
+
+    plt.plot(redHist, 'r')
+    plt.plot(blueHist, 'b')
+
+    cv2.imwrite('.\Results\\' + 'Cropped' + filename, croppedImage)
+
+    plt.savefig('.\Results\\' + filename)
